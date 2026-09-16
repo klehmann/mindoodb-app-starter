@@ -1,0 +1,15 @@
+node_modules/
+dist/
+.wrangler/
+.DS_Store
+coverage/
+*.local
+settings.json
+
+# Lockfile: the template ships without one so a generated repo resolves the current
+# SDK on first install. A lockfile produced by LOCAL_MINDOODB=1 contains file: paths to
+# sibling tarballs and must never be committed.
+pnpm-lock.yaml
+
+# pnpm pack output from sibling first-party checkouts.
+*.tgz

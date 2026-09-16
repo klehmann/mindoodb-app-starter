@@ -1,0 +1,16 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "mindoodb-app-starter",
+  "compatibility_date": "2026-04-09",
+  "observability": {
+    "enabled": true
+  },
+  "assets": {
+    "directory": "./dist",
+    // Not "single-page-application": that answers a request for an unpublished hashed
+    // bundle with index.html and a cacheable 200, which poisons browser and edge caches
+    // with HTML stored under a .js address. This app has no client-side routes, so no
+    // fallback is needed. See public/404.html.
+    "not_found_handling": "404-page"
+  }
+}

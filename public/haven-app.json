@@ -1,0 +1,18 @@
+{
+  "format": "mindoodb.haven.app",
+  "formatVersion": 1,
+  "appId": "mindoodb-app-starter",
+  "label": "MindooDB App Starter",
+  "description": "A new MindooDB Haven application.",
+  "version": "0.1.0",
+  "runtime": "iframe",
+  "hosting": "external",
+  "defaultLaunchDatabaseId": "main",
+  "databases": [
+    {
+      "logicalDatabaseId": "main",
+      "label": "Main",
+      "permissions": ["write"]
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "name": "mindoodb-haven-app",
+  "install": "pnpm install",
+  // A no-op `start` is required for `terminals` to be launched at all when Builds are
+  // enabled: the platform ties tmux terminal startup to the start step.
+  "start": "true",
+  "terminals": [
+    {
+      "name": "dev",
+      "command": "pnpm dev",
+      "description": "Vite dev server on http://127.0.0.1:4300. The app shows a 'could not reach the Haven host' message when opened directly — that is expected outside Haven."
+    }
+  ],
+  "ports": [{ "name": "dev", "port": 4300 }]
+}

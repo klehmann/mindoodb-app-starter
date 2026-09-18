@@ -72,6 +72,7 @@ four places at creation time. They must stay consistent with each other:
 ## Docs
 
 - <https://mindoodb.com/llms-full.txt> — the platform, condensed
+- <https://github.com/klehmann/MindooDB/blob/main/docs/best-practices.md> — how to design data, queries, and Haven apps
 - `node_modules/mindoodb-app-sdk/README.md` — full SDK reference
 - <https://github.com/klehmann/mindoodb-app-example> — working code for every SDK feature
 

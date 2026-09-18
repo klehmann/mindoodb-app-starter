@@ -11,6 +11,7 @@ Use these and nothing else. They match the SDK version pinned in `package.json`.
 | For | Read |
 | --- | --- |
 | The whole platform, condensed for agents | <https://mindoodb.com/llms-full.txt> |
+| How to design data, queries, and Haven apps | <https://github.com/klehmann/MindooDB/blob/main/docs/best-practices.md> |
 | Full App SDK reference | `node_modules/mindoodb-app-sdk/README.md` |
 | Working code for every feature | <https://github.com/klehmann/mindoodb-app-example> |
 | Types and JSDoc | `node_modules/mindoodb-app-sdk/dist/index.d.ts` |
@@ -93,3 +94,8 @@ Every push to `main` triggers a Cloudflare Workers build that runs `pnpm build` 
 deploys `dist/`. You do not need credentials and should not add a deploy workflow. Just
 push; the live origin updates itself, and Haven picks up the new `haven-app.json` on the
 next install or update.
+
+**Commit to `main` and do not open a pull request** unless you were asked for one. Only
+`main` deploys, so work left on a side branch never reaches the person waiting for the
+app — and nothing fails to tell them why. This matters most on the first build, which
+someone is watching for an address to open.

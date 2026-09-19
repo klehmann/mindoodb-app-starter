@@ -26,8 +26,17 @@ import {
   type MindooDBAppSession,
 } from "mindoodb-app-sdk";
 
-/** The logical database id declared in `haven-app.json`. Keep the two in sync. */
-export const MAIN_DATABASE_ID = "main";
+import appDefinition from "../public/haven-app.json";
+
+/**
+ * The logical database id declared in `haven-app.json`. The generated-app builder
+ * rewrites that file (typically to `app_<slug>`), so this constant follows it instead
+ * of hardcoding `main`.
+ */
+export const MAIN_DATABASE_ID =
+  appDefinition.defaultLaunchDatabaseId ??
+  appDefinition.databases?.[0]?.logicalDatabaseId ??
+  "main";
 
 function readErrorMessage(error: unknown, fallback: string) {
   return error instanceof Error ? error.message : fallback;

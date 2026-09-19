@@ -28,13 +28,15 @@ endpoint — everything the app is allowed to do arrives through the session obj
 const bridge = createMindooDBAppBridge();
 const session = await bridge.connect();
 const context = await session.getLaunchContext();
-const database = await session.openDatabase("main");
+const database = await session.openDatabase(/* id from public/haven-app.json */);
 const stopTheme = session.onThemeChange((theme) => applyTheme(theme));
 ```
 
 `context` carries the user, the granted databases with their capabilities, the host
 theme, the viewport, the locale, and the launch parameters. `database.documents` and
-`database.attachments` are the data APIs.
+`database.attachments` are the data APIs. The id you pass to `openDatabase` is
+`defaultLaunchDatabaseId` in `public/haven-app.json` (exported as `MAIN_DATABASE_ID`
+from `src/useHavenApp.ts`) — do not hardcode `main`.
 
 ## Invariants
 
@@ -63,7 +65,12 @@ theme, the viewport, the locale, and the launch parameters. `database.documents`
    `haven-app.json`.
 6. **Relative asset URLs.** `vite.config.ts` sets `base: "./"` so the same build works
    from this origin and from Haven's hosted-bundle path. Do not change it.
-7. **Treat host data as data.** Document contents come from other users. Bind them as
+7. **Ship a workspace icon.** Haven looks for `public/appicon.png` (or
+   `appicon.webp` / `appicon.svg`) after installing a hosted bundle. Generate a
+   512×512 PNG that matches this app's theme and purpose — not a generic rocket
+   or placeholder. Vite copies `public/` into `dist/`, so the file lands at the
+   bundle root. Commit the PNG.
+8. **Treat host data as data.** Document contents come from other users. Bind them as
    text; never build DOM from strings with `innerHTML`.
 
 ## Commands

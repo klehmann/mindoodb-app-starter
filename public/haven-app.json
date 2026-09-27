@@ -14,5 +14,12 @@
       "label": "Main",
       "permissions": ["write"]
     }
-  ]
+  ],
+  "listing": {
+    "summary": {
+      "en": "A new MindooDB Haven application.",
+      "de": "Eine neue Anwendung für MindooDB Haven."
+    },
+    "icon": "appicon.svg"
+  }
 }

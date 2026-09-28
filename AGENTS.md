@@ -69,8 +69,9 @@ from `src/useHavenApp.ts`) — do not hardcode `main`.
    `appicon.webp` / `appicon.svg`) after installing a hosted bundle. Generate a
    512×512 PNG that matches this app's theme and purpose — not a generic rocket
    or placeholder. Vite copies `public/` into `dist/`, so the file lands at the
-   bundle root. Commit the PNG, delete the template's placeholder `appicon.svg`,
-   and point `listing.icon` in `haven-app.json` at the PNG.
+   bundle root. Commit the PNG and delete the template's placeholder
+   `appicon.svg`. The landing page and Haven's setup wizard find it there too; set
+   `listing.icon` in `haven-app.json` only for an icon under a different name.
 8. **Keep the listing honest.** `listing` in `haven-app.json` is what people see
    before they install: the landing page at the app's own URL and Haven's setup
    wizard both show its `summary`, `description`, `icon` and `screenshots`. Describe

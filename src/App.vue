@@ -56,6 +56,16 @@ onMounted(() => {
 </template>
 
 <style>
+/*
+ * No rubber band on the document root, also inside the Haven iframe. `!important`
+ * because older mindoodb-app-sdk versions set `overscroll-behavior: contain` inline
+ * on <html> at connect time, and `contain` still lets iOS bounce the root: a drag
+ * on a non-scrollable area (e.g. a dialog header) then slides fixed overlays along.
+ */
+html {
+  overscroll-behavior: none !important;
+}
+
 :root {
   color-scheme: light;
   --app-background: #f6f8fb;

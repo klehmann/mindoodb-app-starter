@@ -10,9 +10,18 @@ pnpm install
 pnpm dev          # http://127.0.0.1:4300
 ```
 
-Opening that URL in a plain browser tab shows "could not reach the Haven host". That is
-correct: the app talks to Haven over a postMessage bridge that only exists when Haven
-launches it. To see it for real, deploy it and install the URL in Haven.
+Opening that URL directly shows the app's landing page: what the app is, taken from
+`listing` in `public/haven-app.json`, and a button that opens Haven with this app ready
+to install. That is also what anyone sees who gets the deployed URL in a message. The
+app itself only runs when Haven launches it, because it talks to Haven over a
+postMessage bridge.
+
+To run the app without Haven, open the test URL <http://127.0.0.1:4300/__haven-test/>.
+It frames the app with a mock Haven: seeded data from `src/testHost/seed.ts`, toggles
+for theme and host focus, a picker for what the next document scan returns, and a log of
+notifications, previews and requests. Point Playwright at the same URL. The test URL is
+never part of a production build; set `HAVEN_TEST_HOST=1` to include it in a preview
+deployment.
 
 ## Deploy it
 
@@ -51,7 +60,9 @@ permission listed here is one the user has to approve, so ask for the minimum.
 | --- | --- |
 | `src/useHavenApp.ts` | The entire Haven integration: connect, launch context, databases, theme |
 | `src/App.vue` | Welcome screen — replace this with the actual app |
-| `public/haven-app.json` | The install contract Haven reads from the deployed origin |
+| `public/haven-app.json` | The install contract Haven reads from the deployed origin, plus the `listing` shown on the landing page and in Haven's setup wizard |
+| `src/main.ts` | Runs the app when Haven launched it, otherwise shows the landing page |
+| `__haven-test/`, `src/testHost/` | The test URL: the app framed by a mock Haven, with seed data |
 | `public/_headers` | CORS for the files Haven fetches cross-origin |
 | `wrangler.jsonc` | Cloudflare Workers static-asset config |
 | `AGENTS.md` | Ground rules and doc pointers for coding agents |
@@ -66,7 +77,7 @@ four places at creation time. They must stay consistent with each other:
 | --- | --- |
 | `package.json` | `name` |
 | `wrangler.jsonc` | `name` (the Worker, and therefore the URL) |
-| `public/haven-app.json` | `appId`, `label`, `description` |
+| `public/haven-app.json` | `appId`, `label`, `description`, `listing.summary` |
 | `TASK.md` | the description you typed |
 
 ## Docs

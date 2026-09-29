@@ -69,8 +69,15 @@ from `src/useHavenApp.ts`) — do not hardcode `main`.
    `appicon.webp` / `appicon.svg`) after installing a hosted bundle. Generate a
    512×512 PNG that matches this app's theme and purpose — not a generic rocket
    or placeholder. Vite copies `public/` into `dist/`, so the file lands at the
-   bundle root. Commit the PNG.
-8. **Treat host data as data.** Document contents come from other users. Bind them as
+   bundle root. Commit the PNG and delete the template's placeholder
+   `appicon.svg`. The landing page and Haven's setup wizard find it there too; set
+   `listing.icon` in `haven-app.json` only for an icon under a different name.
+8. **Keep the listing honest.** `listing` in `haven-app.json` is what people see
+   before they install: the landing page at the app's own URL and Haven's setup
+   wizard both show its `summary`, `description`, `icon` and `screenshots`. Describe
+   what the app actually does, in plain words. It grants nothing and is never shown
+   inside the running app.
+9. **Treat host data as data.** Document contents come from other users. Bind them as
    text; never build DOM from strings with `innerHTML`.
 
 ## Commands
@@ -90,10 +97,14 @@ The template ships without a lockfile. The first `pnpm install` in a generated r
 creates one — **commit it**, so later builds are reproducible. Never commit a lockfile
 produced by a `:local` command; those contain `file:` paths to sibling tarballs.
 
-Opening `http://127.0.0.1:4300` directly shows a "could not reach the Haven host"
-message — that is correct. There is no bridge outside Haven. To see it running, install
-the deployed URL in Haven, or use `createFakeBridgeHost` from
-`mindoodb-app-sdk/testing` in tests.
+Opening `http://127.0.0.1:4300` directly shows the landing page — that is correct.
+There is no bridge outside Haven, and `src/main.ts` only mounts the app when Haven
+launched it. To see the app running, open `http://127.0.0.1:4300/__haven-test/`: it
+frames the app with a mock Haven and seed data from `src/testHost/seed.ts` (add
+documents there when the app needs something to show). Use the same URL for Playwright
+tests; `window.__havenTestHost` scripts theme, focus and scans. In Vitest use
+`createMockMindooDBAppSession` / `createFakeBridgeHost` from `mindoodb-app-sdk/testing`.
+Never deploy the test URL to production.
 
 ## How this gets deployed
 

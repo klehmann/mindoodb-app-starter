@@ -30,6 +30,21 @@ function createResolveAliases(): Record<string, string> {
   return aliases;
 }
 
+/**
+ * `/__haven-test/` frames the app with a mock Haven (see `src/testHost/main.ts`). `vite dev`
+ * serves it anyway; a build only includes it with `HAVEN_TEST_HOST=1`, for preview
+ * deployments, so the production URL never exposes a mock-data page to end users.
+ */
+function createBuildInputs(): Record<string, string> {
+  const inputs: Record<string, string> = {
+    main: fileURLToPath(new URL("./index.html", import.meta.url)),
+  };
+  if (process.env.HAVEN_TEST_HOST === "1") {
+    inputs.havenTest = fileURLToPath(new URL("./__haven-test/index.html", import.meta.url));
+  }
+  return inputs;
+}
+
 export default defineConfig({
   // Relative asset URLs so the same build works from this app's own origin and from
   // Haven's `/__mindoodb_hosted_apps__/<bundleId>/` prefix in hosted mode.
@@ -43,6 +58,11 @@ export default defineConfig({
   plugins: [wasm(), vue(), havenBundle()],
   resolve: {
     alias: createResolveAliases(),
+  },
+  build: {
+    rollupOptions: {
+      input: createBuildInputs(),
+    },
   },
   server: {
     host: "127.0.0.1",

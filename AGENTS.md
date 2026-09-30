@@ -13,6 +13,7 @@ Use these and nothing else. They match the SDK version pinned in `package.json`.
 | The whole platform, condensed for agents | <https://mindoodb.com/llms-full.txt> |
 | How to design data, queries, and Haven apps | <https://github.com/klehmann/MindooDB/blob/main/docs/best-practices.md> |
 | Full App SDK reference | `node_modules/mindoodb-app-sdk/README.md` |
+| Testing: test host, Vitest mocks, Playwright | `node_modules/mindoodb-app-sdk/TESTING.md` |
 | Working code for every feature | <https://github.com/klehmann/mindoodb-app-example> |
 | Types and JSDoc | `node_modules/mindoodb-app-sdk/dist/index.d.ts` |
 
@@ -97,14 +98,43 @@ The template ships without a lockfile. The first `pnpm install` in a generated r
 creates one — **commit it**, so later builds are reproducible. Never commit a lockfile
 produced by a `:local` command; those contain `file:` paths to sibling tarballs.
 
+## Testing
+
 Opening `http://127.0.0.1:4300` directly shows the landing page — that is correct.
 There is no bridge outside Haven, and `src/main.ts` only mounts the app when Haven
-launched it. To see the app running, open `http://127.0.0.1:4300/__haven-test/`: it
-frames the app with a mock Haven and seed data from `src/testHost/seed.ts` (add
-documents there when the app needs something to show). Use the same URL for Playwright
-tests; `window.__havenTestHost` scripts theme, focus and scans. In Vitest use
-`createMockMindooDBAppSession` / `createFakeBridgeHost` from `mindoodb-app-sdk/testing`.
+launched it. To see the app running, open **`http://127.0.0.1:4300/__haven-test/`**: it
+frames the app with a mock Haven (`src/testHost/main.ts`) and seed data from
+`src/testHost/seed.ts` — add documents there when the app needs something to show.
 Never deploy the test URL to production.
+
+The panel next to the app controls the mock host; `TESTING.md` of the installed SDK
+describes each control and option:
+
+- **Language**: changes the locale live — check that every screen follows `onLocaleChange`.
+- **Databases**: capability checkboxes per database and *Enforce capabilities*. With
+  enforcement on, a call the database was not granted fails with `forbidden`, as in
+  Haven. Test every feature with fewer rights than `haven-app.json` requests: the app
+  must hide the action or say what is missing, not fail at the bridge.
+- **Directory**: generated users for recipient pickers; use
+  `directory.listUsers({ query, cursor, limit })` so large directories page.
+- **Scanner**: what `attachments.scan()` returns (cancel, a sample page, a chosen file).
+- **Requests**: every bridge call; click one for its parameters, result or error, and
+  duration — the first place to look when something does not work.
+
+The panel's settings are part of the URL, so a scenario can be opened directly, e.g.
+`/__haven-test/?enforce=1&db=main:read&users=120&locale=de-DE` (`db=<id>:none` unmaps a
+database). The same options go into `mountHavenTestHost(...)` in `src/testHost/main.ts`
+(`enforceCapabilities`, `directoryUsers: generateDirectoryUsers(120)`, `scanMode`,
+overrides in `mockDatabasesFromDefinition`).
+
+**Playwright** uses the same URL; the app is in `[data-testid="haven-test-app-frame"]`
+and `window.__havenTestHost` scripts the host (`setCapabilities`, `setLocale`,
+`setNextScan`, `setDirectoryUsers`, `log`).
+
+**Vitest**: `createMockMindooDBAppSession` / `createFakeBridgeHost` from
+`mindoodb-app-sdk/testing` take the same options (`enforceCapabilities: true`,
+`directoryUsers`), plus `createMemoryAttachments()` for attachments that can be read
+back.
 
 ## How this gets deployed
 

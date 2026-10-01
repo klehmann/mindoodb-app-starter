@@ -7,6 +7,7 @@
  */
 import { onMounted } from "vue";
 
+import { formatBuildInfo } from "@/buildInfo";
 import { useHavenApp } from "@/useHavenApp";
 
 const app = useHavenApp();
@@ -52,6 +53,8 @@ onMounted(() => {
       Next step: describe what this app should do in <code>TASK.md</code>, then let a
       coding agent implement it. <code>AGENTS.md</code> has the ground rules.
     </p>
+
+    <p class="detail build">Build {{ formatBuildInfo() }}</p>
   </main>
 </template>
 
@@ -136,6 +139,11 @@ ul {
   margin: 0;
   color: var(--app-muted);
   font-size: 0.85rem;
+}
+
+.build {
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
 }
 
 li .detail {

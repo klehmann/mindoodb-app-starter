@@ -1,3 +1,5 @@
+import { execSync } from "node:child_process";
+import { readFileSync } from "node:fs";
 import { fileURLToPath, URL } from "node:url";
 import vue from "@vitejs/plugin-vue";
 import { havenBundle } from "mindoodb-app-sdk/vite";
@@ -45,7 +47,29 @@ function createBuildInputs(): Record<string, string> {
   return inputs;
 }
 
+const packageJson = JSON.parse(readFileSync(new URL("./package.json", import.meta.url), "utf8")) as {
+  version: string;
+};
+/** Commit being built: Cloudflare provides it; locally ask git; "dev" when neither works. */
+const gitSha = (() => {
+  const fromCi = process.env.CF_PAGES_COMMIT_SHA ?? process.env.WORKERS_CI_COMMIT_SHA;
+  if (fromCi) {
+    return fromCi.slice(0, 7);
+  }
+  try {
+    return execSync("git rev-parse --short HEAD", { stdio: ["ignore", "pipe", "ignore"] }).toString().trim();
+  } catch {
+    return "dev";
+  }
+})();
+
 export default defineConfig({
+  // Build stamp (see src/buildInfo.ts), so users and bug reports can tell which build runs.
+  define: {
+    __APP_VERSION__: JSON.stringify(packageJson.version),
+    __BUILD_TIMESTAMP__: JSON.stringify(new Date().toISOString()),
+    __GIT_SHA__: JSON.stringify(gitSha),
+  },
   // Relative asset URLs so the same build works from this app's own origin and from
   // Haven's `/__mindoodb_hosted_apps__/<bundleId>/` prefix in hosted mode.
   base: "./",

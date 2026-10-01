@@ -80,6 +80,10 @@ from `src/useHavenApp.ts`) — do not hardcode `main`.
    inside the running app.
 9. **Treat host data as data.** Document contents come from other users. Bind them as
    text; never build DOM from strings with `innerHTML`.
+10. **Keep the build stamp visible.** `src/buildInfo.ts` carries version, commit and
+    build time (stamped in by `vite.config.ts`). When you replace the welcome screen,
+    show `formatBuildInfo()` somewhere unobtrusive, e.g. the footer of a settings or
+    about dialog, so users can tell which build they see.
 
 ## Commands
 

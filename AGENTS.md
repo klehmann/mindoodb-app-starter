@@ -81,6 +81,30 @@ from `src/useHavenApp.ts`) — do not hardcode `main`.
 9. **Treat host data as data.** Document contents come from other users. Bind them as
    text; never build DOM from strings with `innerHTML`.
 
+## Let AI agents use the app
+
+Haven can hand an app's operations to AI agents (WebMCP). When you build a
+feature, also offer it as agent tools with `session.agent.registerTools(...)` in
+`src/useHavenApp.ts` (or a module it calls), right after `connect()`. The full
+API is in `node_modules/mindoodb-app-sdk/README.md`, section "Agent tools
+(WebMCP)"; the design rules are in the best-practices guide, section 8.5. In
+short:
+
+- For every kind of record the app manages: a **search/list** tool (exact
+  filters through `documents.query`, free text through the full-text index), a
+  **get** tool, and **create/update** tools as domain operations — not UI clicks.
+- Every tool that takes an id says which tool returns it; unknown ids throw
+  `MindooDBAppAgentToolError("NOT_FOUND", …, "call <app>_<search tool>")`.
+- Use field names users understand, return what changed, cap list sizes.
+- `readOnlyHint` on reads; `consequentialHint` on deleting, sending and
+  sharing; `untrustedContentHint` when results contain user-written text.
+- Call `session.agent.setContext(...)` with what is open or selected.
+- Guard with `if (session.agent)`: older Haven versions have no agent tools.
+- Test the tools by calling `execute` directly with a fake database.
+
+Nothing in `haven-app.json` is needed; the user switches agent access on in
+Haven.
+
 ## Commands
 
 ```bash

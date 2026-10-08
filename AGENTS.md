@@ -121,6 +121,14 @@ describes each control and option:
 - **Requests**: every bridge call; click one for its parameters, result or error, and
   duration — the first place to look when something does not work.
 
+**Two users:** `/__haven-test/?twoUsers=1` shows the app twice, side by side, each on
+its own replica of the databases (like two people on two devices). Auto-sync merges
+them every 2 s; turn it off, edit on both sides, press **Sync** and check that nothing
+is lost — one changes a text while the other changes its color, both add an item, both
+format the same word. If the app writes rich text, prefer `richTextSteps` (splices and
+marks) for edits of existing text: they merge at old `baseHeads`. In Vitest, two mocks
+with distinct `automergeActor`s and `syncMockReplicas(a, b)` do the same.
+
 The panel's settings are part of the URL, so a scenario can be opened directly, e.g.
 `/__haven-test/?enforce=1&db=main:read&users=120&locale=de-DE` (`db=<id>:none` unmaps a
 database). The same options go into `mountHavenTestHost(...)` in `src/testHost/main.ts`

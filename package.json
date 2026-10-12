@@ -20,7 +20,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "mindoodb-app-sdk": "^0.0.66",
+    "mindoodb-app-sdk": "^0.0.68",
     "vue": "^3.5.31"
   },
   "devDependencies": {

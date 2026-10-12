@@ -80,6 +80,40 @@ from `src/useHavenApp.ts`) — do not hardcode `main`.
    inside the running app.
 9. **Treat host data as data.** Document contents come from other users. Bind them as
    text; never build DOM from strings with `innerHTML`.
+10. **Usable without a mouse and without sight.** Haven makes the app's frame reachable
+    for screen readers and the keyboard; what happens inside is this app's job. See
+    *Accessibility* below.
+
+## Accessibility
+
+Haven announces the frame by the app's label, puts it where its tile is for VoiceOver
+and TalkBack, and makes the tile the Tab stop that hands focus into the app. Tab at the
+end of the app (Shift+Tab at its start) leaves it again. Inside the frame:
+
+- **Semantic HTML first.** One `<main>`, headings in order, real `<button>`, `<a href>`,
+  `<label for>` / `aria-label` for every control, lists as lists. A `<div @click>` is
+  invisible to the keyboard and to screen readers.
+- **Language.** Set `document.documentElement.lang` from `launchContext.locale` and
+  `session.onLocaleChange` (done in `src/useHavenApp.ts`), so screen readers pick the
+  right voice.
+- **Keyboard.** Everything reachable and operable with Tab, Enter, Space, arrows;
+  visible `:focus-visible` styles in both themes; no keyboard traps (the last focusable
+  element must let Tab leave the app); Escape closes the app's own dialogs and returns
+  focus to what opened them. Do not autofocus on load: Haven decides when the app
+  gets focus.
+- **Announcements.** Status that changes on its own (loading, saved, sync, errors) goes
+  into a live region (`role="status"`, errors `role="alert"`). Results the user may
+  miss while looking elsewhere go through `session.notify`, which Haven announces.
+- **Menus.** Context and overflow menus via `session.menus.show` get keyboard and
+  screen reader support from Haven for free; prefer them over hand-made popups.
+- **Look.** Contrast of at least 4.5:1 for text in the light and the dark theme; sizes in
+  `rem` so the user's text size applies; touch targets of at least 44×44 px; honor
+  `prefers-reduced-motion`; never convey state by color alone.
+- **Canvas and maps.** Give the canvas an `aria-label` and offer the same content as a
+  list or form (select, edit, delete an item without pointing). Agent tools are not a
+  substitute.
+- **Check it.** Add an axe check to the E2E tests (`@axe-core/playwright`, no serious or
+  critical violations) and walk the main flow once with the keyboard only.
 
 ## Commands
 

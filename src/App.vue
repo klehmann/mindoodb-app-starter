@@ -20,12 +20,12 @@ onMounted(() => {
   <main class="app">
     <h1>{{ app.launchContext.value?.appId ?? "MindooDB App Starter" }}</h1>
 
-    <p v-if="app.connecting.value" class="status">Connecting to Haven…</p>
+    <p v-if="app.connecting.value" class="status" role="status">Connecting to Haven…</p>
 
-    <p v-else-if="app.error.value" class="status status--error">{{ app.error.value }}</p>
+    <p v-else-if="app.error.value" class="status status--error" role="alert">{{ app.error.value }}</p>
 
     <template v-else-if="app.connected.value">
-      <p class="status">
+      <p class="status" role="status">
         Connected as <strong>{{ app.userName.value }}</strong>
       </p>
 
@@ -82,6 +82,12 @@ html {
   --app-text: #f6f8ff;
   --app-muted: #9fb0c4;
   --app-border: #1e3350;
+}
+
+/* Keyboard focus must stay visible in both themes (see AGENTS.md, Accessibility). */
+:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
 }
 
 body {

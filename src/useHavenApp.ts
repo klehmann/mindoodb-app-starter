@@ -51,6 +51,7 @@ export function useHavenApp() {
   const error = ref<string | null>(null);
 
   let unsubscribeTheme: (() => void) | null = null;
+  let unsubscribeLocale: (() => void) | null = null;
 
   const connected = computed(() => session.value !== null);
   const userName = computed(() => launchContext.value?.user.username ?? "");
@@ -62,6 +63,13 @@ export function useHavenApp() {
   const canWrite = computed(
     () => mainDatabaseInfo.value?.capabilities.includes("create") === true,
   );
+
+  /** Screen readers pick their voice from `lang`; follow Haven's UI language. */
+  function applyLocale(locale: string) {
+    if (locale) {
+      document.documentElement.lang = locale;
+    }
+  }
 
   /** Mirror the host theme onto the document so CSS can follow it. */
   function applyTheme(next: MindooDBAppHostTheme) {
@@ -81,6 +89,8 @@ export function useHavenApp() {
       launchContext.value = context;
       applyTheme(context.theme);
       unsubscribeTheme = nextSession.onThemeChange(applyTheme);
+      applyLocale(context.locale);
+      unsubscribeLocale = nextSession.onLocaleChange(applyLocale);
 
       // Opening a database is optional for a welcome screen, but doing it here proves
       // the mapping in haven-app.json actually resolved.
@@ -100,6 +110,8 @@ export function useHavenApp() {
   async function disconnect() {
     unsubscribeTheme?.();
     unsubscribeTheme = null;
+    unsubscribeLocale?.();
+    unsubscribeLocale = null;
     const current = session.value;
     session.value = null;
     database.value = null;

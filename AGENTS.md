@@ -83,6 +83,9 @@ from `src/useHavenApp.ts`) — do not hardcode `main`.
 10. **Usable without a mouse and without sight.** Haven makes the app's frame reachable
     for screen readers and the keyboard; what happens inside is this app's job. See
     *Accessibility* below.
+11. **Every text in every language Haven speaks.** Each user-facing string ships in en,
+    de, es, fr, it, nb, nl and pl — never only English, never only English and German.
+    See *Languages* below.
 
 ## Accessibility
 
@@ -114,6 +117,29 @@ end of the app (Shift+Tab at its start) leaves it again. Inside the frame:
   substitute.
 - **Check it.** Add an axe check to the E2E tests (`@axe-core/playwright`, no serious or
   critical violations) and walk the main flow once with the keyboard only.
+
+## Languages
+
+Haven's UI comes in **en, de, es, fr, it, nb, nl, pl** and hands the user's choice to the
+app (`launchContext.locale`, `session.onLocaleChange`). Every user-facing string ships
+in all eight, in the same change that adds it: labels, buttons, placeholders, empty
+states, errors, `aria-label`s, texts for `session.notify` and `session.menus`, and the
+`listing` texts in `haven-app.json`. If the app builds on a library that supports more
+languages, ship all of those too.
+
+- **Make a gap impossible to merge.** Keep strings in typed tables —
+  `const messages = { en, de, es, fr, it, nb, nl, pl } satisfies Record<Locale, Messages>`
+  with `Messages` derived from the English table — so a missing language or key fails
+  `pnpm build`. With one JSON file per locale, add a Vitest test that compares every
+  locale's keys and `{placeholders}` with `en`. Falling back to English is for locales
+  Haven does not offer, not for strings nobody translated.
+- **Map the tag.** `de-AT` → `de`, `nb-NO` and the legacy `no` → `nb`, anything unknown
+  → `en`. Dates and numbers go through `Intl` with the active locale.
+- **Say it as Haven says it.** Use the terms Haven's own UI uses in that language
+  (database, tenant, attachment, …), and its form of address: German *du*, Spanish *tú*,
+  French *vous*, Italian *tu*, Norwegian *du*, Dutch *je*, Polish informal.
+- **Check it.** Open the main screens in all eight languages in the test host
+  (`/__haven-test/?locale=nb-NO`, or `setLocale` from Playwright).
 
 ## Commands
 

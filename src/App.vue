@@ -90,6 +90,22 @@ html {
   outline-offset: 2px;
 }
 
+/*
+ * Controls are not text: on a phone a long press must not select a button's label or
+ * open the callout (see AGENTS.md, Accessibility). Fields and content stay selectable.
+ */
+button,
+[role="button"],
+[role="tab"],
+[role="menu"],
+[role="menuitem"],
+[role="treeitem"],
+[role="toolbar"] {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
 body {
   margin: 0;
   background: var(--app-background);

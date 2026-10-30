@@ -112,6 +112,17 @@ end of the app (Shift+Tab at its start) leaves it again. Inside the frame:
 - **Look.** Contrast of at least 4.5:1 for text in the light and the dark theme; sizes in
   `rem` so the user's text size applies; touch targets of at least 44×44 px; honor
   `prefers-reduced-motion`; never convey state by color alone.
+- **Touch.** On a phone the app runs in Haven's frame like a native app:
+  - Controls are not text. Buttons, tabs, menu items, toolbars and list or tree rows
+    get `user-select: none` and `-webkit-touch-callout: none`, so a long press does not
+    select a label. Fields, editors and content stay selectable. The rule is in
+    `src/App.vue`.
+  - Tooltips only where there is hover (`@media (hover: none)` hides them), because a
+    tap leaves them standing.
+  - No autofocus on touch screens (`(hover: none) and (pointer: coarse)`): iOS opens no
+    keyboard for a focus the user did not tap, and in Haven's frame `autofocus` is
+    blocked, so the field would only look focused.
+  - Fields at 16px or more, or iOS zooms in when one gets the focus.
 - **Canvas and maps.** Give the canvas an `aria-label` and offer the same content as a
   list or form (select, edit, delete an item without pointing). Agent tools are not a
   substitute.

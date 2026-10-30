@@ -141,6 +141,35 @@ languages, ship all of those too.
 - **Check it.** Open the main screens in all eight languages in the test host
   (`/__haven-test/?locale=nb-NO`, or `setLocale` from Playwright).
 
+## When the task asks for AI agent tools (WebMCP)
+
+Haven lets an app offer its operations to AI agents. Do this when `TASK.md` asks for it
+(or for "AI", "agents", "MCP"); otherwise leave it out.
+
+- Copy the pattern of mindoodb-app-example: `src/features/agent/lib/exampleAgentTools.ts`
+  (tools as plain objects with `execute`), `agentUndo.ts`, `src/app/useAgentSection.ts`
+  (`session.agent?.registerTools(...)`, `setContext`). The rules are in the SDK README,
+  section "Agent tools (WebMCP)".
+- Tools work on a small public model in plain words, never on storage field names. Start
+  with `get_context`, `list`/search (query filters plus full-text), `get`, `create`,
+  `update`, `delete` (`consequentialHint`) and `undo`; every write call is one undo step.
+- Add `"agentToolPrefix"` and the `agent` block (summary, capabilities naming every
+  tool, examples, limits) to `public/haven-app.json`, and a unit test with
+  `assertAgentManifest` from `mindoodb-app-sdk/testing`. If you add `public/agent/*.md`
+  guides, serve them with `Access-Control-Allow-Origin: *` in `public/_headers`.
+- Nothing that leaves the app (sending, publishing, paying) runs from a tool without the
+  user: mark it `consequentialHint`, or let the tool fill the form and ask the user to
+  press the button.
+
+## When the task asks to edit Word, Excel or PowerPoint documents
+
+Do not build an editor: embed TeamEdit, TeamGrid or TeamSlides as components and store
+their documents in this app's database (`session.components.list`,
+`session.embeds.requestAccess`, `session.embeds.open`). Copy the "Embedded editors" tab
+of mindoodb-app-example (`src/app/useEmbedsSection.ts`, `src/features/embeds/`) and read
+the SDK README section "Components: embedding another app's editor", including its host
+checklist. The user must have those apps installed in Haven; show which one is missing.
+
 ## Commands
 
 ```bash

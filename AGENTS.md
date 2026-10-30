@@ -63,7 +63,11 @@ from `src/useHavenApp.ts`) — do not hardcode `main`.
 5. **The app runs in an iframe with a restricted sandbox.** Popups, camera, microphone,
    geolocation, WebRTC and workers are off unless the registration enables them. In
    hosted mode outbound network calls need a `networkAllowlist` entry in
-   `haven-app.json`.
+   `haven-app.json`. The frame's own storage is small (about 1 GB on iOS): for
+   large local files (offline maps, media caches) request `allowFiles` and use
+   `session.localFiles`, which Haven keeps encrypted in its own storage — see
+   "Large files on the device" in llms-full.txt. Check `state()` and fall back when it
+   is not `available`.
 6. **Relative asset URLs.** `vite.config.ts` sets `base: "./"` so the same build works
    from this origin and from Haven's hosted-bundle path. Do not change it.
 7. **Ship a workspace icon.** Haven looks for `public/appicon.png` (or

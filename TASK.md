@@ -16,3 +16,5 @@ Replace this section with a description of the application.
 
 - Keep `public/haven-app.json` in step with the databases the app actually uses.
 - Prefer finishing one working screen over scaffolding several unfinished ones.
+- Before the first release, complete the listing as `AGENTS.md` describes in *Landing page,
+  store gallery and link preview*: texts in all eight languages, icon, screenshots, share image.

@@ -12,7 +12,9 @@ pnpm dev          # http://127.0.0.1:4300
 
 Opening that URL directly shows the app's landing page: what the app is, taken from
 `listing` in `public/haven-app.json`, and a button that opens Haven with this app ready
-to install. That is also what anyone sees who gets the deployed URL in a message. The
+to install. That is also what anyone sees who gets the deployed URL in a message, and
+the link preview there uses `listing.shareImage` (see *Landing page, store gallery and
+link preview* in `AGENTS.md`). The
 app itself only runs when Haven launches it, because it talks to Haven over a
 postMessage bridge.
 
@@ -61,6 +63,8 @@ permission listed here is one the user has to approve, so ask for the minimum.
 | `src/useHavenApp.ts` | The entire Haven integration: connect, launch context, databases, theme |
 | `src/App.vue` | Welcome screen — replace this with the actual app |
 | `public/haven-app.json` | The install contract Haven reads from the deployed origin, plus the `listing` shown on the landing page and in Haven's setup wizard |
+| `public/appicon.png` | The app icon (512×512, placeholder); `listing.icon` points to it |
+| `public/listing/` | Store screenshots and the link preview image `share.png` |
 | `src/main.ts` | Runs the app when Haven launched it, otherwise shows the landing page |
 | `__haven-test/`, `src/testHost/` | The test URL: the app framed by a mock Haven, with seed data |
 | `public/_headers` | CORS for the files Haven fetches cross-origin |

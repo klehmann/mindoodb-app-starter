@@ -66,18 +66,19 @@ from `src/useHavenApp.ts`) — do not hardcode `main`.
    `haven-app.json`.
 6. **Relative asset URLs.** `vite.config.ts` sets `base: "./"` so the same build works
    from this origin and from Haven's hosted-bundle path. Do not change it.
-7. **Ship a workspace icon.** Haven looks for `public/appicon.png` (or
-   `appicon.webp` / `appicon.svg`) after installing a hosted bundle. Generate a
-   512×512 PNG that matches this app's theme and purpose — not a generic rocket
-   or placeholder. Vite copies `public/` into `dist/`, so the file lands at the
-   bundle root. Commit the PNG and delete the template's placeholder
-   `appicon.svg`. The landing page and Haven's setup wizard find it there too; set
-   `listing.icon` in `haven-app.json` only for an icon under a different name.
-8. **Keep the listing honest.** `listing` in `haven-app.json` is what people see
-   before they install: the landing page at the app's own URL and Haven's setup
-   wizard both show its `summary`, `description`, `icon` and `screenshots`. Describe
-   what the app actually does, in plain words. It grants nothing and is never shown
-   inside the running app.
+7. **Ship a workspace icon.** `public/appicon.png` is a 512×512 placeholder, and
+   `listing.icon` in `haven-app.json` points to it: Haven, the landing page and the link
+   preview all load the icon from there. Replace the file with a 512×512 PNG that
+   matches this app's theme and purpose — not a generic rocket or placeholder. Keep it
+   a raster image (PNG or WebP): link previews and the share image cannot use SVG. If
+   you rename the file, change `listing.icon` with it. Vite copies `public/` into
+   `dist/`, so the file lands at the bundle root.
+8. **Keep the listing honest and complete.** `listing` in `haven-app.json` is what
+   people see before they install: the landing page at the app's own URL and Haven's
+   setup wizard both show it. Describe what the app actually does, in plain words, in
+   all eight languages, with real screenshots and a share image. It grants nothing and
+   is never shown inside the running app. See *Landing page, store gallery and link
+   preview* below.
 9. **Treat host data as data.** Document contents come from other users. Bind them as
    text; never build DOM from strings with `innerHTML`.
 10. **Usable without a mouse and without sight.** Haven makes the app's frame reachable
@@ -140,6 +141,73 @@ languages, ship all of those too.
   French *vous*, Italian *tu*, Norwegian *du*, Dutch *je*, Polish informal.
 - **Check it.** Open the main screens in all eight languages in the test host
   (`/__haven-test/?locale=nb-NO`, or `setLocale` from Playwright).
+
+## Landing page, store gallery and link preview
+
+Opening the app's URL outside Haven (a shared link, a bookmark, a search result) shows
+the SDK's landing page, not the app: `src/main.ts` calls `renderHavenAppLandingPage()`
+when `isLaunchedByHaven()` is false. Keep it that way — never mount the app there, it
+has no bridge to talk to. The page has an install button that opens Haven with this app.
+
+Everything on that page, in Haven's setup wizard and in the link preview comes from
+`listing` in `public/haven-app.json`. There is no other place to put it, and no page to
+design. Fill these fields:
+
+| Field | What goes in |
+| --- | --- |
+| `publicUrl` (top level) | The deployed origin with a trailing slash, e.g. `https://my-app.example.workers.dev/`. **Mandatory:** without it a production build writes no share tags at all. Never guess it: if you do not know the address, leave it out and say so in your final summary. |
+| `listing.summary` | One or two sentences: what the app is for. Up to 300 characters. |
+| `listing.description` + `listing.descriptionMarkdown` | The longer text, plain and with Markdown (paragraphs, lists, bold, `https:` links). Same content; Haven shows the Markdown one, older readers the plain one. |
+| `listing.icon` | `appicon.png`, 512×512 raster. **Mandatory:** Haven loads the app icon from here. |
+| `listing.publisher` | `{ "name", "url" }` — the builder fills this from the form; keep it. |
+| `listing.screenshots` | Up to 8 entries `{ "file": "listing/01-overview.webp", "caption": { "en": …, "de": …, … } }`. The landing page shows them as a gallery; a click opens a full-screen lightbox with the caption. |
+| `listing.shareImage` | `listing/share.png`, 1200×630, written by the generator below. |
+
+**All texts in all eight languages** (en, de, es, fr, it, nb, nl, pl), including every
+caption: a map with each locale, not a plain string. Address the reader as Haven does:
+German *du*, Spanish *tú*, French *vous* (with a narrow no-break space U+202F before
+`:` `;` `?` `!`), Italian *tu*, Norwegian *du*, Dutch *je*, Polish informal.
+
+**Screenshots.** WebP, 1600×1000 in `public/listing/`, named `01-….webp`, `02-….webp`
+in gallery order (a phone shot may be portrait). Show the real UI with realistic demo
+data from the test host, never an empty state or lorem ipsum; light theme first, one
+dark shot near the end. Make them reproducible with a script instead of taking them by
+hand — `scripts/store-screenshots.mjs` in
+[mindoodb-app-invoice](https://github.com/klehmann/mindoodb-app-invoice) shows the
+pattern: Playwright opens `/__haven-test/?theme=light&locale=en-US`, resizes the window
+until `[data-testid="haven-test-app-frame"]` is 1280×800, clicks into the app through
+`page.frameLocator(...)` to reach each scene, screenshots the frame at
+`deviceScaleFactor: 1.25` (= 1600×1000) and converts to WebP (`cwebp -q 86`). Add the
+script with a `pnpm screenshots` entry, run it against `pnpm dev`, then list the files
+with their captions in `listing.screenshots`.
+
+**Share image.** Once the screenshots exist, run in the repository root:
+
+```bash
+npx -p playwright@1 -p mindoodb-app-sdk mindoodb-share-image
+```
+
+It draws `public/listing/share.png` (1200×630) from the icon, the app name and the first
+screenshot, and sets `"shareImage": "listing/share.png"`. It holds no sentences, so one
+image fits every language. Run it again whenever the icon, the name or the first
+screenshot changes, and commit the PNG. It needs a mindoodb-app-sdk version with
+`listing.shareImage` support; older ones ignore the field and show the small icon card.
+
+**Check it.** `pnpm build`, then `dist/index.html` must contain `og:image` with the
+absolute share-image URL under `publicUrl` and
+`<meta name="twitter:card" content="summary_large_image">`. `pnpm test` validates
+`haven-app.json` with the SDK. Open `http://127.0.0.1:4300/` (not the test URL) and look
+at the landing page; it follows the browser language, so check a few with Playwright's
+`locale` option.
+
+### Before the first release
+
+- [ ] `publicUrl` is the deployed origin.
+- [ ] `listing.summary`, `description` and `descriptionMarkdown` describe this app, in all eight languages.
+- [ ] `public/appicon.png` is this app's own 512×512 icon, and `listing.icon` points to it.
+- [ ] 3–8 screenshots in `public/listing/`, made by a script, with captions in all eight languages.
+- [ ] `public/listing/share.png` generated after the screenshots, `listing.shareImage` set.
+- [ ] `dist/index.html` has `og:image` and `twitter:card` `summary_large_image`.
 
 ## When the task asks for AI agent tools (WebMCP)
 

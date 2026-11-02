@@ -155,7 +155,7 @@ design. Fill these fields:
 
 | Field | What goes in |
 | --- | --- |
-| `publicUrl` (top level) | The deployed origin with a trailing slash, e.g. `https://my-app.example.workers.dev/`. **Mandatory:** without it a production build writes no share tags at all. Never guess it: if you do not know the address, leave it out and say so in your final summary. |
+| `publicUrl` (top level) | The deployed origin with a trailing slash, e.g. `https://my-app.example.workers.dev/`. **Mandatory:** without it a production build writes no share tags at all. The app builder writes it when it reserves the app's address, so a generated app already has it: leave it as it is. Only if it is missing, and you know the address for certain, add it; never guess one, and say in your final summary that it is missing. |
 | `listing.summary` | One or two sentences: what the app is for. Up to 300 characters. |
 | `listing.description` + `listing.descriptionMarkdown` | The longer text, plain and with Markdown (paragraphs, lists, bold, `https:` links). Same content; Haven shows the Markdown one, older readers the plain one. |
 | `listing.icon` | `appicon.png`, 512×512 raster. **Mandatory:** Haven loads the app icon from here. |
@@ -202,7 +202,7 @@ at the landing page; it follows the browser language, so check a few with Playwr
 
 ### Before the first release
 
-- [ ] `publicUrl` is the deployed origin.
+- [ ] `publicUrl` is the deployed origin (set by the app builder; unchanged).
 - [ ] `listing.summary`, `description` and `descriptionMarkdown` describe this app, in all eight languages.
 - [ ] `public/appicon.png` is this app's own 512×512 icon, and `listing.icon` points to it.
 - [ ] 3–8 screenshots in `public/listing/`, made by a script, with captions in all eight languages.

@@ -81,7 +81,7 @@ four places at creation time. They must stay consistent with each other:
 | --- | --- |
 | `package.json` | `name` |
 | `wrangler.jsonc` | `name` (the Worker, and therefore the URL) |
-| `public/haven-app.json` | `appId`, `label`, `description`, `listing.summary` |
+| `public/haven-app.json` | `appId`, `label`, `description`, `listing.summary`, and `publicUrl` (the Worker's address, in a second commit once the Worker exists) |
 | `TASK.md` | the description you typed |
 
 ## Docs

@@ -16,9 +16,37 @@
     }
   ],
   "listing": {
+    "icon": "appicon.png",
     "summary": {
       "en": "A new MindooDB Haven application.",
-      "de": "Eine neue Anwendung für MindooDB Haven."
-    }
+      "de": "Eine neue Anwendung für MindooDB Haven.",
+      "es": "Una nueva aplicación para MindooDB Haven.",
+      "fr": "Une nouvelle application pour MindooDB Haven.",
+      "it": "Una nuova applicazione per MindooDB Haven.",
+      "nb": "En ny app for MindooDB Haven.",
+      "nl": "Een nieuwe app voor MindooDB Haven.",
+      "pl": "Nowa aplikacja dla MindooDB Haven."
+    },
+    "description": {
+      "en": "A starting point for an app that runs inside MindooDB Haven.\n\nIts data is stored end-to-end encrypted in MindooDB and syncs between your devices and the people you share it with.",
+      "de": "Ein Ausgangspunkt für eine App, die in MindooDB Haven läuft.\n\nIhre Daten liegen Ende-zu-Ende-verschlüsselt in MindooDB und werden zwischen deinen Geräten und den Menschen synchronisiert, mit denen du sie teilst.",
+      "es": "Un punto de partida para una app que funciona dentro de MindooDB Haven.\n\nSus datos se guardan cifrados de extremo a extremo en MindooDB y se sincronizan entre tus dispositivos y las personas con las que los compartes.",
+      "fr": "Un point de départ pour une application qui fonctionne dans MindooDB Haven.\n\nSes données sont stockées chiffrées de bout en bout dans MindooDB et synchronisées entre vos appareils et les personnes avec qui vous les partagez.",
+      "it": "Un punto di partenza per un'app che funziona in MindooDB Haven.\n\nI suoi dati sono salvati con crittografia end-to-end in MindooDB e si sincronizzano tra i tuoi dispositivi e le persone con cui li condividi.",
+      "nb": "Et utgangspunkt for en app som kjører i MindooDB Haven.\n\nDataene lagres ende-til-ende-kryptert i MindooDB og synkroniseres mellom enhetene dine og menneskene du deler dem med.",
+      "nl": "Een startpunt voor een app die in MindooDB Haven draait.\n\nDe gegevens worden end-to-end versleuteld in MindooDB opgeslagen en gesynchroniseerd tussen je apparaten en de mensen met wie je ze deelt.",
+      "pl": "Punkt wyjścia dla aplikacji działającej w MindooDB Haven.\n\nJej dane są przechowywane w MindooDB z szyfrowaniem end-to-end i synchronizowane między twoimi urządzeniami a osobami, którym je udostępniasz."
+    },
+    "descriptionMarkdown": {
+      "en": "A starting point for an app that runs inside **MindooDB Haven**.\n\n- Data stored end-to-end encrypted in MindooDB\n- Syncs between your devices and the people you share it with",
+      "de": "Ein Ausgangspunkt für eine App, die in **MindooDB Haven** läuft.\n\n- Daten Ende-zu-Ende-verschlüsselt in MindooDB\n- Synchronisiert zwischen deinen Geräten und den Menschen, mit denen du sie teilst",
+      "es": "Un punto de partida para una app que funciona dentro de **MindooDB Haven**.\n\n- Datos cifrados de extremo a extremo en MindooDB\n- Se sincronizan entre tus dispositivos y las personas con las que los compartes",
+      "fr": "Un point de départ pour une application qui fonctionne dans **MindooDB Haven**.\n\n- Données chiffrées de bout en bout dans MindooDB\n- Synchronisées entre vos appareils et les personnes avec qui vous les partagez",
+      "it": "Un punto di partenza per un'app che funziona in **MindooDB Haven**.\n\n- Dati con crittografia end-to-end in MindooDB\n- Sincronizzati tra i tuoi dispositivi e le persone con cui li condividi",
+      "nb": "Et utgangspunkt for en app som kjører i **MindooDB Haven**.\n\n- Data lagret ende-til-ende-kryptert i MindooDB\n- Synkroniseres mellom enhetene dine og menneskene du deler dem med",
+      "nl": "Een startpunt voor een app die in **MindooDB Haven** draait.\n\n- Gegevens end-to-end versleuteld in MindooDB\n- Gesynchroniseerd tussen je apparaten en de mensen met wie je ze deelt",
+      "pl": "Punkt wyjścia dla aplikacji działającej w **MindooDB Haven**.\n\n- Dane w MindooDB z szyfrowaniem end-to-end\n- Synchronizacja między twoimi urządzeniami a osobami, którym je udostępniasz"
+    },
+    "screenshots": []
   }
 }

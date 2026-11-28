@@ -91,6 +91,21 @@ from `src/useHavenApp.ts`) — do not hardcode `main`.
 11. **Every text in every language Haven speaks.** Each user-facing string ships in en,
     de, es, fr, it, nb, nl and pl — never only English, never only English and German.
     See *Languages* below.
+12. **Pick the value type a field merges with.** A plain string is collaborative text:
+    Automerge keeps one operation per character and merges concurrent edits
+    character by character. Use it only for prose people type (titles, notes,
+    bodies), and change it with text patches. Write everything else that is a string
+    (ids, status and enum values, tags, form values such as names or phone numbers,
+    URLs, dates, serialized JSON) with `MindooDBAppValue.atomic()`, dates with
+    `timestamp()`, tallies with `counter()`: two concurrent writes then end as one
+    whole value instead of a mix of both, and loading stays cheap. Collaborative text
+    costs 100–500 bytes of memory per character on every load, and a document that
+    needs more than the 4 GB of a WebAssembly instance stops Automerge for every
+    document until Haven reloads. Fields that are only valid together (status and
+    folder, amount and currency) go into one atomic value. Wrap
+    `documents.create`/`update` once (a `storedValues` helper, as Vega, TeamEdit and
+    Contacts do) so no write site forgets it. Details: best practices §6.6, §7.6 and
+    §7.7.
 
 ## Accessibility
 
